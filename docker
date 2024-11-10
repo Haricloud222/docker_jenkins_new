@@ -1,0 +1,43 @@
+pipeline {
+    agent { label "projecta" }
+
+    stages {
+        stage('git_clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Haricloud222/Little-fashion_html_project.git'
+                echo 'Hello World'
+            }
+        }
+        stage('docker_build') {
+            steps {
+                sh 'docker build -t litte_fashion_hari .'
+                echo 'Hello World'
+            }
+        }
+        stage('docker_run') {
+            steps {
+                sh 'docker stop litte_fashion_container || true'
+                sh 'docker rm litte_fashion_container ||true'
+                sh 'docker run --name litte_fashion_container -d -p 81:80 haridocker96/little_fashion_hari'
+            }
+        }
+        stage('docker_tag') {
+            steps {
+                sh 'docker tag litte_fashion haridocker96/litte_fashion_hari'
+                echo 'Hello World'
+            }
+        }
+        stage('docker_login') {
+            steps {
+                sh 'dockcr login -u haridocker96 -p Hari@123456'
+                echo 'Hello World'
+            }
+        }
+        stage('docker_push') {
+            steps {
+                sh 'docker push haridocker96/litte_fashion_hari'
+                echo 'Hello World'
+            }
+        }
+    }
+}
